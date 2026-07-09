@@ -45,13 +45,13 @@ html, body {
 
 #status-bar {
   position: fixed;
-  bottom: 28px;
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: calc(100vw - 24px);
+  max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   padding: 8px 22px 8px 10px;
   background: rgba(15, 15, 17, 0.78);
   color: #fff;
@@ -269,8 +269,9 @@ html, body {
   }
 
   #status-bar {
-    bottom: 16px;
-    width: calc(100vw - 20px);
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 20px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-width: none;
     padding: 10px 16px;
     gap: 12px;
     font-size: 14px;
@@ -292,7 +293,7 @@ html, body {
 
   @keyframes status-pulse {
     0% { transform: translateX(-50%) scale(1); }
-    35% { transform: translateX(-50%) scale(1.08); }
+    35% { transform: translateX(-50%) scale(1.04); }
     100% { transform: translateX(-50%) scale(1); }
   }
 }
