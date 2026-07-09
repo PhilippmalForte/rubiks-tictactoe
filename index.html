@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rubik's Tic-Tac-Toe</title>
+<link rel="stylesheet" href="style.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="three-canvas"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<div id="ui-overlay">
+  <div id="status-bar">
+    <span id="player-badge">✕</span>
+    <span id="status-text">Spielernamen eingeben, um zu starten</span>
+  </div>
+  <div id="banner" hidden>
+    <div id="banner-message"></div>
+    <button id="new-game-btn">Neues Spiel</button>
+  </div>
+  <div id="setup" class="dialog">
+    <div class="dialog-title">Rubik's Tic-Tac-Toe</div>
+    <p id="setup-intro">Dieses Spiel kombiniert Tic-Tac-Toe mit einem Rubik's Cube. Es ist das erste Computerspiel, das ich selbst entwickelt habe. 🙂</p>
+    <label class="setup-field"><span class="setup-symbol symbol-x">✕</span><input id="p1-name" placeholder="Spieler 1" maxlength="20" autocomplete="off" /></label>
+    <label class="setup-field"><span class="setup-symbol symbol-o">◯</span><input id="p2-name" placeholder="Spieler 2" maxlength="20" autocomplete="off" /></label>
+    <button id="next-btn" class="dialog-btn">Weiter</button>
+  </div>
+  <div id="rules" class="dialog" hidden>
+    <div class="dialog-title">Spielregeln</div>
+    <ol id="setup-rules">
+      <li><strong>Zeichen setzen:</strong> Klicke auf ein leeres Feld.</li>
+      <li><strong>Ebene drehen:</strong> Ziehe danach über den Würfel.</li>
+      <li><strong>Gewinnen:</strong> 3 gleiche Zeichen in einer Reihe auf einer Seite.</li>
+    </ol>
+    <div id="setup-hint">Tipp: Ziehe über den Hintergrund, um den Würfel von allen Seiten anzusehen.</div>
+    <button id="start-btn" class="dialog-btn">Spiel starten</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

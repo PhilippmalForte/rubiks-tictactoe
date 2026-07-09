@@ -1,0 +1,236 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #202124;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#three-canvas {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#ui-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+#status-bar {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 22px 8px 10px;
+  background: rgba(15, 15, 17, 0.78);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+  border: 2px solid transparent;
+  transition: border-color 0.25s ease;
+}
+
+#player-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 21px;
+  font-weight: 700;
+  color: #16171a;
+  transition: background 0.25s ease;
+}
+
+#status-bar.player-x { border-color: #ffb340; }
+#status-bar.player-x #player-badge { background: #ffb340; }
+#status-bar.player-o { border-color: #4fc3f7; }
+#status-bar.player-o #player-badge { background: #4fc3f7; }
+
+#toast.player-x { border-left: 6px solid #ffb340; }
+#toast.player-o { border-left: 6px solid #4fc3f7; }
+
+@keyframes status-pulse {
+  0% { transform: translateX(-50%) scale(1); }
+  35% { transform: translateX(-50%) scale(1.12); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+#status-bar.pulse {
+  animation: status-pulse 0.45s ease;
+}
+
+#banner {
+  pointer-events: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(12, 12, 14, 0.95);
+  color: #fff;
+  padding: 32px 44px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+  min-width: 260px;
+}
+
+#banner-message {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+#new-game-btn {
+  pointer-events: auto;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #16171a;
+  cursor: pointer;
+}
+
+#new-game-btn:hover {
+  background: #d9d9d9;
+}
+
+.dialog {
+  pointer-events: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(12, 12, 14, 0.95);
+  color: #fff;
+  padding: 32px 44px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dialog[hidden] {
+  display: none;
+}
+
+.dialog-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+#setup-intro {
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 6px 0;
+  max-width: 340px;
+}
+
+#setup-rules {
+  text-align: left;
+  margin: 0 0 4px 0;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#setup-rules strong {
+  color: #fff;
+}
+
+#setup-hint {
+  text-align: left;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 10px;
+}
+
+.setup-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.setup-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 19px;
+  font-weight: 700;
+  color: #16171a;
+  flex-shrink: 0;
+}
+
+.symbol-x { background: #ffb340; }
+.symbol-o { background: #4fc3f7; }
+
+.setup-field input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  outline: none;
+}
+
+.setup-field input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.dialog-btn {
+  margin-top: 8px;
+  padding: 11px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #16171a;
+  cursor: pointer;
+}
+
+.dialog-btn:hover {
+  background: #d9d9d9;
+}
