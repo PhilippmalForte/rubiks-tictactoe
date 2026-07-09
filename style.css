@@ -45,13 +45,20 @@ html, body {
 
 #status-bar {
   position: fixed;
+  /* Center by pinning both edges to the safe area and letting auto margins
+     split the remaining space. Works identically in Chrome and Safari at every
+     width — no 100vw, no translateX, no dependency on a media-query breakpoint. */
+  left: env(safe-area-inset-left, 0px);
+  right: env(safe-area-inset-right, 0px);
   bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-  left: 50%;
-  transform: translateX(-50%);
+  margin-left: auto;
+  margin-right: auto;
+  width: -webkit-fit-content;
+  width: fit-content;
+  max-width: calc(100% - 24px);
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   padding: 8px 22px 8px 10px;
   background: rgba(15, 15, 17, 0.78);
   color: #fff;
@@ -61,6 +68,7 @@ html, body {
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
   border: 2px solid transparent;
   transition: border-color 0.25s ease;
+  transform-origin: center;
 }
 
 #player-badge {
@@ -86,9 +94,9 @@ html, body {
 #toast.player-o { border-left: 6px solid #4fc3f7; }
 
 @keyframes status-pulse {
-  0% { transform: translateX(-50%) scale(1); }
-  35% { transform: translateX(-50%) scale(1.12); }
-  100% { transform: translateX(-50%) scale(1); }
+  0% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 
 #status-bar.pulse {
@@ -269,22 +277,16 @@ html, body {
   }
 
   #status-bar {
-    /* Pin both edges to the safe area instead of width + translateX centering,
-       which mis-centered against iOS 100vw/viewport-fit=cover. Anchoring left
-       and right makes the bar symmetric by construction. */
-    left: max(12px, env(safe-area-inset-left, 0px));
-    right: max(12px, env(safe-area-inset-right, 0px));
+    /* Centering is inherited from the base rule (auto margins). Here we only
+       adjust sizing: nearly full width, tighter bottom offset, smaller text. */
     bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-    transform: none;
-    width: auto;
-    max-width: none;
+    max-width: calc(100% - 20px);
     padding: 10px 16px;
     gap: 12px;
     font-size: 14px;
     line-height: 1.35;
     text-align: left;
     border-radius: 16px;
-    transform-origin: center;
   }
 
   #status-text {
@@ -296,12 +298,5 @@ html, body {
     width: 34px;
     height: 34px;
     font-size: 18px;
-  }
-
-  /* Pulse via scale only — no translateX now that the bar is edge-pinned. */
-  @keyframes status-pulse {
-    0% { transform: scale(1); }
-    35% { transform: scale(1.03); }
-    100% { transform: scale(1); }
   }
 }
