@@ -26,6 +26,27 @@ scene.background = new THREE.Color(0x202124);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(3.4, 3.2, 4.6);
 
+// Bounding-sphere radius of the 3x3 cube plus margin, used to frame it responsively.
+const FIT_RADIUS = 3.1;
+
+// Pull the camera to a distance where the whole cube fits in BOTH viewport
+// dimensions. On portrait/narrow screens the horizontal field of view is the
+// tighter constraint, so we back off further there. Preserves the current
+// orbit direction so the user's rotation isn't reset on resize.
+function fitCameraToViewport() {
+  const aspect = window.innerWidth / window.innerHeight;
+  const vFov = THREE.MathUtils.degToRad(camera.fov);
+  const distForHeight = FIT_RADIUS / Math.tan(vFov / 2);
+  const dist = Math.max(distForHeight, distForHeight / aspect);
+  const dir = camera.position.clone().sub(controls.target);
+  if (dir.lengthSq() === 0) dir.set(3.4, 3.2, 4.6);
+  dir.normalize();
+  camera.position.copy(controls.target).addScaledVector(dir, dist);
+  controls.minDistance = FIT_RADIUS * 1.1;
+  controls.maxDistance = Math.max(10, dist * 1.6);
+  controls.update();
+}
+
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -45,9 +66,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.1;
 controls.enablePan = false;
-controls.minDistance = 3.5;
-controls.maxDistance = 10;
 controls.target.set(0, 0, 0);
+fitCameraToViewport();
 
 const game = createGame({ cube3D, statusEl, statusBarEl, playerBadgeEl, bannerEl, bannerMessageEl, newGameBtn, setupEl, rulesEl, p1Input, p2Input, nextBtn, startBtn, confetti });
 
@@ -57,6 +77,7 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  fitCameraToViewport();
 }
 window.addEventListener('resize', onWindowResize);
 

@@ -13,10 +13,12 @@ All player-facing text is **German**.
 ES modules don't load over `file://`, so serve the directory:
 
 ```
-python3 -m http.server 5500
+python3 serve.py
 ```
 
-Then open http://localhost:5500. There are no tests and no lint setup; verification is done by driving the game in a browser (synthetic PointerEvents dispatched on `#three-canvas` work for automation — see Gameplay rules below for the flow to exercise).
+Then open http://localhost:5500. `serve.py` is a tiny static server that adds `Cache-Control: no-store` to every response — plain `python3 -m http.server` lets the browser aggressively cache ES modules, so edits appear not to take effect until a hard refresh. Use `serve.py` while developing.
+
+There are no tests and no lint setup; verification is done by driving the game in a browser (synthetic PointerEvents dispatched on `#three-canvas` work for automation — see Gameplay rules below for the flow to exercise). Note: when driving via a viewport-emulating tool, trust `getBoundingClientRect`/projection readings over screenshots — the page's emulated `innerWidth/Height` can differ from the screenshot surface.
 
 ## Gameplay rules (drive all logic decisions)
 
@@ -32,7 +34,7 @@ Five ES modules under `js/`, wired together by `main.js` (scene/camera/renderer/
 - **`interaction.js`** — pointer gesture state machine: click-to-place vs drag-to-turn vs drag-to-orbit.
 - **`game.js`** — turn/phase state machine (`place` → `rotate` → next player), win/draw detection, all UI text (status bar, dialogs, banner), two-step startup flow (intro+names dialog → rules dialog).
 - **`confetti.js`** — self-contained canvas confetti on win.
-- **`main.js`** — bootstrap and DOM element lookup.
+- **`main.js`** — bootstrap and DOM element lookup. `fitCameraToViewport()` (called on init and resize) pulls the camera to a distance that frames the whole cube in both dimensions — on portrait/narrow screens the horizontal FOV is the tighter constraint, so it backs off further. It preserves the current orbit direction so a resize doesn't reset the user's rotation.
 
 ### Core invariant: integer game state, float visuals
 
