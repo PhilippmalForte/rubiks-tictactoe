@@ -49,5 +49,30 @@
 </div>
 
 <script type="module" src="js/main.js?v=2"></script>
+<div id="diag" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(220,0,0,0.92);color:#fff;font:12px/1.35 monospace;padding:6px 8px;white-space:pre-wrap;pointer-events:none"></div>
+<script>
+(function(){
+  function px(el){ if(!el) return 'n/a'; var r=el.getBoundingClientRect(); return Math.round(r.left)+'/'+Math.round(r.right)+' w='+Math.round(r.width); }
+  var probe=document.createElement('div');
+  probe.style.cssText='position:fixed;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden';
+  document.body.appendChild(probe);
+  function upd(){
+    var cs=getComputedStyle(probe);
+    var sb=document.getElementById('status-bar');
+    var vv=window.visualViewport||{};
+    var de=document.documentElement;
+    document.getElementById('diag').textContent=
+      'innerW='+window.innerWidth+' innerH='+window.innerHeight+' dpr='+window.devicePixelRatio+'\n'+
+      'visualVP w='+Math.round(vv.width||0)+' scale='+(vv.scale||1)+' offL='+Math.round(vv.offsetLeft||0)+'\n'+
+      'safe-area L/R/B = '+cs.paddingLeft+' / '+cs.paddingRight+' / '+cs.paddingBottom+'\n'+
+      'doc scrollW='+de.scrollWidth+' clientW='+de.clientWidth+' (overflow if scrollW>clientW)\n'+
+      'status-bar left/right/w = '+px(sb)+'\n'+
+      'css v = '+(([].slice.call(document.querySelectorAll('link')).map(function(l){return l.getAttribute('href')}).join(',')));
+  }
+  upd();
+  setInterval(upd,600);
+  window.addEventListener('resize',upd);
+})();
+</script>
 </body>
 </html>
