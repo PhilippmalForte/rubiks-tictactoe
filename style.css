@@ -43,19 +43,24 @@ html, body {
   z-index: 10;
 }
 
-#status-bar {
+/* Full-width fixed dock that horizontally centers the bar via flexbox — the
+   most engine-agnostic centering there is (no fit-content, auto-margins,
+   translateX, or 100vw). Padding carries the side margins and safe-area insets. */
+#status-dock {
   position: fixed;
-  /* Center by pinning both edges to the safe area and letting auto margins
-     split the remaining space. Works identically in Chrome and Safari at every
-     width — no 100vw, no translateX, no dependency on a media-query breakpoint. */
-  left: env(safe-area-inset-left, 0px);
-  right: env(safe-area-inset-right, 0px);
-  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-  margin-left: auto;
-  margin-right: auto;
-  width: -webkit-fit-content;
-  width: fit-content;
-  max-width: calc(100% - 24px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 max(12px, env(safe-area-inset-left, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-right, 0px));
+  z-index: 10;
+}
+
+#status-bar {
+  pointer-events: auto;
+  max-width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -276,11 +281,13 @@ html, body {
     font-size: 20px;
   }
 
+  #status-dock {
+    /* Tighter bottom offset on phones; centering still handled by the dock's flex. */
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
   #status-bar {
-    /* Centering is inherited from the base rule (auto margins). Here we only
-       adjust sizing: nearly full width, tighter bottom offset, smaller text. */
-    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-    max-width: calc(100% - 20px);
+    width: 100%;
     padding: 10px 16px;
     gap: 12px;
     font-size: 14px;
