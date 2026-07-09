@@ -269,8 +269,14 @@ html, body {
   }
 
   #status-bar {
+    /* Pin both edges to the safe area instead of width + translateX centering,
+       which mis-centered against iOS 100vw/viewport-fit=cover. Anchoring left
+       and right makes the bar symmetric by construction. */
+    left: max(12px, env(safe-area-inset-left, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px));
     bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-    width: calc(100vw - 20px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    transform: none;
+    width: auto;
     max-width: none;
     padding: 10px 16px;
     gap: 12px;
@@ -278,6 +284,7 @@ html, body {
     line-height: 1.35;
     text-align: left;
     border-radius: 16px;
+    transform-origin: center;
   }
 
   #status-text {
@@ -291,9 +298,10 @@ html, body {
     font-size: 18px;
   }
 
+  /* Pulse via scale only — no translateX now that the bar is edge-pinned. */
   @keyframes status-pulse {
-    0% { transform: translateX(-50%) scale(1); }
-    35% { transform: translateX(-50%) scale(1.04); }
-    100% { transform: translateX(-50%) scale(1); }
+    0% { transform: scale(1); }
+    35% { transform: scale(1.03); }
+    100% { transform: scale(1); }
   }
 }
